@@ -49,7 +49,7 @@ export default function Home({ pokemonList }: HomeProps) {
 
   return (
     <main className={`w-screen h-screen bg-red-500 ${roboto.className}`}>
-      <div className="h-36 p-4 flex flex-col gap-4">
+      <div className="h-36 py-4 px-4 md:px-0 flex flex-col gap-4 md:max-w-4xl md:mx-auto">
         <div className="flex items-center gap-2">
           <Image
             src="/assets/pokeball.svg"
@@ -65,13 +65,13 @@ export default function Home({ pokemonList }: HomeProps) {
             placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-4 py-2 border rounded-xl w-4/5"
+            className="px-4 py-2 border rounded-xl w-4/5 md:w-11/12"
           />
           <button
             onClick={() =>
               handleSortOrderChange(sortOrder === "asc" ? "desc" : "asc")
             }
-            className="px-4 py-2 rounded-xl flex items-center space-x-2 bg-gray-200 w-1/5"
+            className="px-4 py-2 rounded-xl flex items-center space-x-2 bg-gray-200 w-1/5 md:w-1/12"
           >
             <div className="flex flex-col">
               <span>A</span>
@@ -98,19 +98,19 @@ export default function Home({ pokemonList }: HomeProps) {
           </button>
         </div>
       </div>
-      <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl">
+      <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl md:max-w-4xl md:mx-auto">
         <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {sortedPokemonList.map((pokemon) => {
-            const id = getPokemonId(pokemon.url);
-            const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
-            return (
-              <Card
-                key={pokemon.name}
-                id={id}
-                name={pokemon.name}
-                imageUrl={imageUrl}
-              />
-            );
+        const id = getPokemonId(pokemon.url);
+        const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
+        return (
+          <Card
+            key={pokemon.name}
+            id={id}
+            name={pokemon.name}
+            imageUrl={imageUrl}
+          />
+        );
           })}
         </ul>
       </div>

@@ -14,7 +14,7 @@ const Card = (props: CardProps) => {
     return name.charAt(0).toUpperCase() + name.slice(1);
   };
   return (
-    <li className="flex flex-col items-center space-y-2 border rounded-lg w-10/12 cursor-pointer shadow-lg">
+    <li className="flex flex-col items-center space-y-2 border rounded-lg w-10/12 cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300">
       <p className="self-end text-xs text-slate-400 mr-2 pt-2">#{id}</p>
       <Link href={`/pokemon/${name}`} passHref>
         <Image src={imageUrl} alt={name} width={72} height={72} />
