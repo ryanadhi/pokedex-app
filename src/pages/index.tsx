@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { Roboto } from "next/font/google";
 import Card from "@/components/Card";
@@ -27,10 +26,6 @@ export default function Home({ pokemonList }: HomeProps) {
 
   const handleSortOrderChange = (order: "asc" | "desc") => {
     setSortOrder(order);
-  };
-
-  const capitalizeName = (name: string) => {
-    return name.charAt(0).toUpperCase() + name.slice(1);
   };
 
   const filteredPokemonList = pokemonList.filter((pokemon) =>

@@ -78,50 +78,59 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
         return name;
     }
   };
+
+  const getMaxStat = (baseStat: number, statName: string) => {
+    if (statName === 'hp') {
+      return baseStat * 2 + 204;
+    } else {
+      return (baseStat * 2 + 99) * 1.1;
+    }
+  };
+  
   const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`;
 
   return (
     <main
-      className={`w-screen px-4 pt-4 flex flex-col gap-8 ${roboto.className}`}
+      className={`px-4 pt-4 flex flex-col gap-8 ${roboto.className}`}
       style={{ backgroundColor: color }}
     >
-      <div className="fixed top-0 left-0 w-full bg-opacity-90 bg-inherit z-30 p-4">
+      <div className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full bg-opacity-90 bg-inherit z-30 p-4 md:max-w-4xl">
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
-        <Link href="/">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            className={`size-6 cursor-pointer ${
-          isColorLight(color) ? "text-black" : "text-white"
-            }`}
-          >
-            <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
-          </svg>
-        </Link>
-        <h1
-          className={`text-2xl font-semibold tracking-wider ${
-            isColorLight(color) ? "text-black" : "text-white"
-          }`}
-        >
-          {capitalizeName(pokemon.name)}
-        </h1>
+            <Link href="/">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="currentColor"
+                className={`size-6 cursor-pointer ${
+                  isColorLight(color) ? "text-black" : "text-white"
+                }`}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                />
+              </svg>
+            </Link>
+            <h1
+              className={`text-2xl font-semibold tracking-wider ${
+                isColorLight(color) ? "text-black" : "text-white"
+              }`}
+            >
+              {capitalizeName(pokemon.name)}
+            </h1>
           </div>
           <div>
-        <p className="text-xl text-slate-400">
-          #{pokemon.id.toString().padStart(3, "0")}
-        </p>
+            <p className="text-xl text-slate-400">
+              #{pokemon.id.toString().padStart(3, "0")}
+            </p>
           </div>
         </div>
       </div>
-      <div className="z-20 mt-20">
+      <div className="z-20 mt-20 md:max-w-4xl md:mx-auto w-full">
         <Image
           src={pokemonImageUrl}
           alt={pokemon.name}
@@ -130,7 +139,7 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
           className="mx-auto"
         />
       </div>
-      <div className="bg-white flex-grow py-14 rounded-t-lg shadow-md -mt-14 z-10 flex flex-col gap-4 ">
+      <div className="bg-white flex-grow py-14 rounded-t-lg shadow-md -mt-14 z-10 flex flex-col gap-4 md:max-w-4xl w-full md:mx-auto">
         <div className="flex justify-center mb-2">
           {pokemon.types.map((type) => {
             const typeId = getTypeId(type.type.url);
@@ -147,15 +156,15 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
             );
           })}
         </div>
-        <div>
+        <div className="w-full md:w-1/2 md:mx-auto">
           <h2
             className="text-center font-bold text-xl mb-4"
             style={{ color: isColorLight(color) ? "black" : color }}
           >
             About
           </h2>
-          <div className="flex justify-around items-center">
-            <div className="text-center flex gap-2">
+          <div className="flex justify-around items-center ">
+            <div className="text-center flex gap-2 ">
               <Image
                 src="/assets/straighten.svg"
                 alt="Height Icon"
@@ -164,7 +173,7 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
                 className="mx-auto mb-1"
               />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl font-bold">
                   {(pokemon.height / 10).toFixed(1)} m
                 </p>
                 <p className="text-sm text-gray-500">Height</p>
@@ -180,7 +189,7 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
                 className="mx-auto mb-1"
               />
               <div>
-                <p className="text-2xl font-bold">
+                <p className="text-xl font-bold">
                   {(pokemon.weight / 10).toFixed(1)} kg
                 </p>
                 <p className="text-sm text-gray-500">Weight</p>
@@ -188,7 +197,7 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
             </div>
           </div>
         </div>
-        <div>
+        <div className="w-full md:w-2/3 md:mx-auto">
           <h2
             className="text-center font-bold text-xl mb-4"
             style={{ color: isColorLight(color) ? "black" : color }}
@@ -201,16 +210,18 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
                 key={stat.stat.name}
                 className="flex justify-between px-4 items-center gap-4"
               >
-                <p className="text-sm w-2/12 text-end">{getStatName(stat.stat.name)}</p>
+                <p className="text-sm w-2/12 text-end">
+                  {getStatName(stat.stat.name)}
+                </p>
                 <p className="w-1/12 font-semibold">{stat.base_stat}</p>
                 <div className="w-9/12 bg-gray-200 rounded-full h-2.5">
-                  <div
+                    <div
                     className="h-2.5 rounded-full"
                     style={{
-                      width: `${stat.base_stat}%`,
-                      backgroundColor: color,
+                    width: `${(stat.base_stat / getMaxStat(stat.base_stat, stat.stat.name)) * 100}%`,
+                    backgroundColor: color,
                     }}
-                  ></div>
+                    ></div>
                 </div>
               </div>
             ))}
