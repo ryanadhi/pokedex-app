@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Roboto } from "next/font/google";
 import Card from "@/components/Card";
+import Head from "next/head";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -18,11 +19,10 @@ interface HomeProps {
 export default function Home({ pokemonList }: HomeProps) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
 
-  // Simulate data loading when component mounts
   useEffect(() => {
-    setLoading(false); // Set loading to false after mount
+    setLoading(false);
   }, []);
 
   const getPokemonId = (url: string) => {
@@ -63,80 +63,86 @@ export default function Home({ pokemonList }: HomeProps) {
   }
 
   return (
-    <main
-      className={`w-screen h-screen ${roboto.className} bg-gradient-to-b from-red-500 to-pink-500`}
-    >
-      <div className="h-36 py-4 px-4 md:px-0 flex flex-col gap-4 md:max-w-4xl md:mx-auto">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/assets/pokeball.svg"
-            alt="Pokemon Logo"
-            width={32}
-            height={32}
-          />
-          <h1 className="text-3xl font-bold text-white drop-shadow-lg">
-            Pokédex
-          </h1>
+    <>
+      <Head>
+        <title>Pokédex</title>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="Pokédex for Pokémon fans" />
+      </Head>
+      <main
+        className={`w-screen h-screen ${roboto.className} bg-gradient-to-b from-red-500 to-pink-500`}
+      >
+        <div className="h-36 py-4 px-4 md:px-0 flex flex-col gap-4 md:max-w-4xl md:mx-auto">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/assets/pokeball.svg"
+              alt="Pokemon Logo"
+              width={32}
+              height={32}
+            />
+            <h1 className="text-3xl font-bold text-white drop-shadow-lg">
+              Pokédex
+            </h1>
+          </div>
+
+          <div className="flex space-x-4 mb-4">
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-4 py-2 border rounded-xl w-4/5 md:w-11/12 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-md transition duration-200"
+            />
+            <button
+              onClick={() =>
+                handleSortOrderChange(sortOrder === "asc" ? "desc" : "asc")
+              }
+              className="px-4 py-2 rounded-xl flex items-center justify-center bg-gray-200 w-1/5 md:w-1/12 shadow-md hover:bg-gray-300 transition duration-200"
+            >
+              <div className="flex flex-col">
+                <span>A</span>
+                <span>Z</span>
+              </div>
+              <div className="h-full flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className={`h-6 w-6 ${
+                    sortOrder === "desc" ? "rotate-180" : ""
+                  }`}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
         </div>
 
-        <div className="flex space-x-4 mb-4">
-          <input
-            type="text"
-            placeholder="Search by name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-4 py-2 border rounded-xl w-4/5 md:w-11/12 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-md transition duration-200"
-          />
-          <button
-            onClick={() =>
-              handleSortOrderChange(sortOrder === "asc" ? "desc" : "asc")
-            }
-            className="px-4 py-2 rounded-xl flex items-center justify-center bg-gray-200 w-1/5 md:w-1/12 shadow-md hover:bg-gray-300 transition duration-200"
-          >
-            <div className="flex flex-col">
-              <span>A</span>
-              <span>Z</span>
-            </div>
-            <div className="h-full flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className={`h-6 w-6 ${
-                  sortOrder === "desc" ? "rotate-180" : ""
-                }`}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+        <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl shadow-inner md:max-w-4xl md:mx-auto">
+          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {sortedPokemonList.map((pokemon) => {
+              const id = getPokemonId(pokemon.url);
+              const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
+              return (
+                <Card
+                  key={pokemon.name}
+                  id={id}
+                  name={pokemon.name}
+                  imageUrl={imageUrl}
                 />
-              </svg>
-            </div>
-          </button>
+              );
+            })}
+          </ul>
         </div>
-      </div>
-
-      {/* Pokemon Card List */}
-      <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl shadow-inner md:max-w-4xl md:mx-auto">
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {sortedPokemonList.map((pokemon) => {
-            const id = getPokemonId(pokemon.url);
-            const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
-            return (
-              <Card
-                key={pokemon.name}
-                id={id}
-                name={pokemon.name}
-                imageUrl={imageUrl}
-              />
-            );
-          })}
-        </ul>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 
