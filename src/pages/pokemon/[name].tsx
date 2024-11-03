@@ -80,18 +80,18 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
   };
 
   const getMaxStat = (baseStat: number, statName: string) => {
-    if (statName === 'hp') {
+    if (statName === "hp") {
       return baseStat * 2 + 204;
     } else {
       return (baseStat * 2 + 99) * 1.1;
     }
   };
-  
+
   const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${pokemon.id}.svg`;
 
   return (
     <main
-      className={`px-4 pt-4 flex flex-col gap-8 ${roboto.className}`}
+      className={`h-screen px-4 pt-4 flex flex-col gap-8 ${roboto.className}`}
       style={{ backgroundColor: color }}
     >
       <div className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full bg-opacity-90 bg-inherit z-30 p-4 md:max-w-4xl">
@@ -130,101 +130,107 @@ export default function PokemonDetail({ pokemon, color }: PokemonDetailProps) {
           </div>
         </div>
       </div>
-      <div className="z-20 mt-20 md:max-w-4xl md:mx-auto w-full">
-        <Image
-          src={pokemonImageUrl}
-          alt={pokemon.name}
-          width={240}
-          height={240}
-          className="mx-auto"
-        />
-      </div>
-      <div className="bg-white flex-grow py-14 rounded-t-lg shadow-md -mt-14 z-10 flex flex-col gap-4 md:max-w-4xl w-full md:mx-auto">
-        <div className="flex justify-center mb-2">
-          {pokemon.types.map((type) => {
-            const typeId = getTypeId(type.type.url);
-            const typeImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/${typeId}.png`;
-            return (
-              <Image
-                key={type.type.name}
-                src={typeImageUrl}
-                alt={type.type.name}
-                width={96}
-                height={96}
-                className="mx-2"
-              />
-            );
-          })}
+      <div className="mt-20 h-screen overflow-auto">
+        <div className="z-20 md:max-w-4xl md:mx-auto w-full">
+          <Image
+            src={pokemonImageUrl}
+            alt={pokemon.name}
+            width={240}
+            height={240}
+            className="mx-auto"
+          />
         </div>
-        <div className="w-full md:w-1/2 md:mx-auto">
-          <h2
-            className="text-center font-bold text-xl mb-4"
-            style={{ color: isColorLight(color) ? "black" : color }}
-          >
-            About
-          </h2>
-          <div className="flex justify-around items-center ">
-            <div className="text-center flex gap-2 ">
-              <Image
-                src="/assets/straighten.svg"
-                alt="Height Icon"
-                width={36}
-                height={36}
-                className="mx-auto mb-1"
-              />
-              <div>
-                <p className="text-xl font-bold">
-                  {(pokemon.height / 10).toFixed(1)} m
-                </p>
-                <p className="text-sm text-gray-500">Height</p>
+        <div className="bg-white flex-grow py-14 rounded-t-lg shadow-md -mt-10 z-10 flex flex-col gap-4 md:max-w-4xl w-full md:mx-auto">
+          <div className="flex justify-center mb-2">
+            {pokemon.types.map((type) => {
+              const typeId = getTypeId(type.type.url);
+              const typeImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/${typeId}.png`;
+              return (
+          <Image
+            key={type.type.name}
+            src={typeImageUrl}
+            alt={type.type.name}
+            width={96}
+            height={96}
+            className="mx-2"
+          />
+              );
+            })}
+          </div>
+          <div className="w-full md:w-1/2 md:mx-auto">
+            <h2
+              className="text-center font-bold text-xl mb-4"
+              style={{ color: isColorLight(color) ? "black" : color }}
+            >
+              About
+            </h2>
+            <div className="flex justify-around items-center ">
+              <div className="text-center flex gap-2 ">
+          <Image
+            src="/assets/straighten.svg"
+            alt="Height Icon"
+            width={36}
+            height={36}
+            className="mx-auto mb-1"
+          />
+          <div>
+            <p className="text-xl font-bold">
+              {(pokemon.height / 10).toFixed(1)} m
+            </p>
+            <p className="text-sm text-gray-500">Height</p>
+          </div>
               </div>
-            </div>
-            <div className="border-l border-gray-300 h-6"></div>
-            <div className="text-center flex gap-2">
-              <Image
-                src="/assets/weight.svg"
-                alt="Weight Icon"
-                width={36}
-                height={36}
-                className="mx-auto mb-1"
-              />
-              <div>
-                <p className="text-xl font-bold">
-                  {(pokemon.weight / 10).toFixed(1)} kg
-                </p>
-                <p className="text-sm text-gray-500">Weight</p>
+              <div className="border-l border-gray-300 h-6"></div>
+              <div className="text-center flex gap-2">
+          <Image
+            src="/assets/weight.svg"
+            alt="Weight Icon"
+            width={36}
+            height={36}
+            className="mx-auto mb-1"
+          />
+          <div>
+            <p className="text-xl font-bold">
+              {(pokemon.weight / 10).toFixed(1)} kg
+            </p>
+            <p className="text-sm text-gray-500">Weight</p>
+          </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-full md:w-2/3 md:mx-auto">
-          <h2
-            className="text-center font-bold text-xl mb-4"
-            style={{ color: isColorLight(color) ? "black" : color }}
+          <div className="w-full md:w-2/3 md:mx-auto">
+            <h2
+              className="text-center font-bold text-xl mb-4"
+              style={{ color: isColorLight(color) ? "black" : color }}
+            >
+              Base Stats
+            </h2>
+            <div className="flex flex-col gap-4">
+              {pokemon.stats.map((stat) => (
+          <div
+            key={stat.stat.name}
+            className="flex justify-between px-4 items-center gap-4"
           >
-            Base Stats
-          </h2>
-          <div className="flex flex-col gap-4">
-            {pokemon.stats.map((stat) => (
+            <p className="text-sm w-2/12 text-end">
+              {getStatName(stat.stat.name)}
+            </p>
+            <p className="w-1/12 font-semibold">{stat.base_stat}</p>
+            <div className="w-9/12 bg-gray-200 rounded-full h-2.5">
               <div
-                key={stat.stat.name}
-                className="flex justify-between px-4 items-center gap-4"
-              >
-                <p className="text-sm w-2/12 text-end">
-                  {getStatName(stat.stat.name)}
-                </p>
-                <p className="w-1/12 font-semibold">{stat.base_stat}</p>
-                <div className="w-9/12 bg-gray-200 rounded-full h-2.5">
-                    <div
-                    className="h-2.5 rounded-full"
-                    style={{
-                    width: `${(stat.base_stat / getMaxStat(stat.base_stat, stat.stat.name)) * 100}%`,
-                    backgroundColor: color,
-                    }}
-                    ></div>
-                </div>
-              </div>
-            ))}
+                className="h-2.5 rounded-full"
+                style={{
+            width: `${
+              (stat.base_stat /
+                getMaxStat(stat.base_stat, stat.stat.name)) *
+              100
+            }%`,
+            backgroundColor: color,
+                }}
+              ></div>
+            </div>
+          </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

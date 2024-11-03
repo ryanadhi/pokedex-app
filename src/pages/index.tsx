@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Roboto } from "next/font/google";
 import Card from "@/components/Card";
 
@@ -18,6 +18,12 @@ interface HomeProps {
 export default function Home({ pokemonList }: HomeProps) {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true); // Add loading state
+
+  // Simulate data loading when component mounts
+  useEffect(() => {
+    setLoading(false); // Set loading to false after mount
+  }, []);
 
   const getPokemonId = (url: string) => {
     const id = url.split("/").filter(Boolean).pop();
@@ -42,31 +48,50 @@ export default function Home({ pokemonList }: HomeProps) {
       })
     : filteredPokemonList;
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen w-screen bg-gradient-to-b from-red-500 to-pink-500">
+        <Image
+          src="/assets/pokeball.svg"
+          alt="Loading"
+          width={50}
+          height={50}
+          className="animate-spin"
+        />
+      </div>
+    );
+  }
+
   return (
-    <main className={`w-screen h-screen bg-red-500 ${roboto.className}`}>
+    <main
+      className={`w-screen h-screen ${roboto.className} bg-gradient-to-b from-red-500 to-pink-500`}
+    >
       <div className="h-36 py-4 px-4 md:px-0 flex flex-col gap-4 md:max-w-4xl md:mx-auto">
         <div className="flex items-center gap-2">
           <Image
             src="/assets/pokeball.svg"
             alt="Pokemon Logo"
-            width={24}
-            height={24}
+            width={32}
+            height={32}
           />
-          <h1 className="text-2xl font-bold text-slate-50">Pokédex</h1>
+          <h1 className="text-3xl font-bold text-white drop-shadow-lg">
+            Pokédex
+          </h1>
         </div>
+
         <div className="flex space-x-4 mb-4">
           <input
             type="text"
             placeholder="Search by name"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="px-4 py-2 border rounded-xl w-4/5 md:w-11/12"
+            className="px-4 py-2 border rounded-xl w-4/5 md:w-11/12 focus:outline-none focus:ring-2 focus:ring-pink-300 shadow-md transition duration-200"
           />
           <button
             onClick={() =>
               handleSortOrderChange(sortOrder === "asc" ? "desc" : "asc")
             }
-            className="px-4 py-2 rounded-xl flex items-center space-x-2 bg-gray-200 w-1/5 md:w-1/12"
+            className="px-4 py-2 rounded-xl flex items-center justify-center bg-gray-200 w-1/5 md:w-1/12 shadow-md hover:bg-gray-300 transition duration-200"
           >
             <div className="flex flex-col">
               <span>A</span>
@@ -93,19 +118,21 @@ export default function Home({ pokemonList }: HomeProps) {
           </button>
         </div>
       </div>
-      <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl md:max-w-4xl md:mx-auto">
+
+      {/* Pokemon Card List */}
+      <div className="min-h-[calc(100vh-9rem)] max-h-[calc(100vh-9rem)] overflow-auto bg-white px-4 py-8 rounded-t-xl shadow-inner md:max-w-4xl md:mx-auto">
         <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {sortedPokemonList.map((pokemon) => {
-        const id = getPokemonId(pokemon.url);
-        const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
-        return (
-          <Card
-            key={pokemon.name}
-            id={id}
-            name={pokemon.name}
-            imageUrl={imageUrl}
-          />
-        );
+            const id = getPokemonId(pokemon.url);
+            const imageUrl = `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${id}.png`;
+            return (
+              <Card
+                key={pokemon.name}
+                id={id}
+                name={pokemon.name}
+                imageUrl={imageUrl}
+              />
+            );
           })}
         </ul>
       </div>
